@@ -1,4 +1,5 @@
 import { Provider } from "./provider"
+import { SalesforcePersonalization } from "./salesforce-personalization"
 
 export default function RootLayout({
   children,
@@ -8,7 +9,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning style={{ overflow: "hidden" }}>
       <body>
-        <Provider>{children}</Provider>
+        <Provider>
+          <SalesforcePersonalization />
+          {children}
+        </Provider>
       </body>
     </html>
   )
