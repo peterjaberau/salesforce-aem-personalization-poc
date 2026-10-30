@@ -1,33 +1,42 @@
-const sitemapConfig = {
-  pageTypeDefault: {
-    name: "default",
-  },
 
-  pageTypes: [
-    {
-      name: "HOME",
-      isMatch: () => window.location.pathname === "/",
-      interaction: {
-        name: "View Home Page",
-      },
-    },
+var SI = getSalesforceInteractions();
 
+SI.init({
+  consents: [
     {
-      name: "PLANS",
-      isMatch: () => window.location.pathname === "/plans",
-      interaction: {
-        name: "View Plans Page",
-      },
-    },
-
-    {
-      name: "FEATURES",
-      isMatch: () => window.location.pathname === "/features",
-      interaction: {
-        name: "View Features Page",
-      },
+      purpose: "Tracking",
+      provider: "POC",
+      status: "Opt In",
     },
   ],
-}
+}).then(() => {
 
-SalesforceInteractions.initSitemap(sitemapConfig)
+  const currentURL = new URL(window.location.href)
+
+  const sitemapConfig = {
+    pageTypeDefault: {
+      name: "default",
+      eventType: "userEngagement",
+    },
+    pageTypes: [
+      {
+        name: "Home page",
+        isMatch: () => window.location.pathname === "/",
+        interaction: {
+          name: "Page View - Home",
+          eventType: "userEngagement",
+        },
+      },
+      {
+        name: "Features page",
+        isMatch: () => window.location.pathname === "/features",
+        interaction: {
+          name: "Page View - Features",
+          eventType: "userEngagement",
+        },
+      },
+    ],
+  }
+
+  SI.initSitemap(sitemapConfig)
+});
