@@ -1,6 +1,6 @@
 
 var SI = getSalesforceInteractions();
-
+SI.setLoggingLevel("debug")
 SI.init({
   consents: [
     {
@@ -21,7 +21,8 @@ SI.init({
     pageTypes: [
       {
         name: "Home page",
-        isMatch: () => window.location.pathname === "/",
+        isMatch: () =>
+          ["/", "/salesforce-aem-personalization-poc/src/app/static/home.html"].includes(window.location.pathname),
         interaction: {
           name: "Page View - Home",
           eventType: "userEngagement",
