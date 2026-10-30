@@ -1,11 +1,24 @@
 /**
  * SDK setup and temporary fragment hiding.
- *
- * Hide all fragment sections immediately to prevent non-selected content
- * from flashing before Salesforce returns the decision.
  */
 var SI = getSalesforceInteractions()
 SI.setLoggingLevel("debug")
+
+const debugPrefix = "[Salesforce Personalization]"
+
+/**
+ * SDK event logging.
+ *
+ * These logs show the event payload Salesforce is sending and how the
+ * sitemap evaluated the configured page types.
+ */
+document.addEventListener("salesforce:OnEventSend", (event) => {
+  console.debug(`${debugPrefix} Event sent`, event.detail)
+})
+
+document.addEventListener("salesforce:OnPageMatchStatusUpdated", (event) => {
+  console.debug(`${debugPrefix} Page match status`, event.detail)
+})
 
 /**
  * Prepare temporary CSS before SDK initialization so fragment sections
@@ -15,10 +28,13 @@ const fragmentPersonalization = prepareFragmentPersonalization()
 
 /**
  * SDK initialization.
- *
- * Initialize consent and the Personalization data space before using
- * sitemap tracking or requesting a Personalization decision.
  */
+console.info(`${debugPrefix} Initializing SDK`, {
+  url: window.location.href,
+  pathname: window.location.pathname,
+  utmSource: new URLSearchParams(window.location.search).get("utm_source"),
+})
+
 SI.init({
   consents: [
     {
@@ -31,11 +47,10 @@ SI.init({
     dataspace: "default",
   },
 }).then(() => {
+  console.info(`${debugPrefix} SDK initialized`)
+
   /**
    * Sitemap configuration.
-   *
-   * decisionPoint is custom metadata used by this script. It associates
-   * a matched sitemap page type with its Personalization decision point.
    */
   const sitemapConfig = {
     pageTypeDefault: {
@@ -66,33 +81,47 @@ SI.init({
   }
 
   /**
-   * Page matching and decision request.
-   *
-   * Salesforce initializes normal sitemap tracking first. The current page
-   * configuration is then used to request its corresponding decision point.
+   * Sitemap initialization and current-page matching.
    */
   SI.initSitemap(sitemapConfig)
 
   const matchedPageType = sitemapConfig.pageTypes.find((pageType) => pageType.isMatch())
 
+  console.info(`${debugPrefix} Matched page type`, {
+    name: matchedPageType?.name,
+    decisionPoint: matchedPageType?.decisionPoint,
+  })
+
   if (!matchedPageType?.decisionPoint) {
+    console.warn(`${debugPrefix} No decision point configured for this page`)
     fragmentPersonalization.reveal()
     return
   }
 
+  /**
+   * Decision request and response handling.
+   *
+   * This logs the exact decision point supplied to fetch(), its raw response,
+   * and the experienceKey/fragments extracted from that response.
+   */
+  console.info(`${debugPrefix} Requesting decision`, {
+    decisionPoint: matchedPageType.decisionPoint,
+  })
+
   SI.Personalization.fetch([matchedPageType.decisionPoint])
     .then((response) => {
-      /**
-       * Decision response processing.
-       *
-       * A decision returns experienceKey and comma-separated fragments.
-       * The helper supports nested Salesforce response structures.
-       */
+      console.debug(`${debugPrefix} Raw decision response`, response)
+
       const decision = findDecisionOutput(response)
 
       if (!decision) {
         throw new Error(`No decision returned for ${matchedPageType.decisionPoint}`)
       }
+
+      console.info(`${debugPrefix} Parsed decision output`, {
+        experienceKey: decision.experienceKey,
+        fragments: decision.fragments,
+      })
 
       const enabledFragments = new Set(
         decision.fragments
@@ -102,11 +131,7 @@ SI.init({
       )
 
       /**
-       * Fragment rendering.
-       *
-       * Keep only sections whose data-fragment value appears in the returned
-       * fragments output. The selected experience remains inspectable on
-       * the HTML element as data-experience-key.
+       * Fragment rendering and verification logging.
        */
       const renderDecision = () => {
         document.documentElement.dataset.experienceKey = decision.experienceKey
@@ -114,6 +139,13 @@ SI.init({
         document.querySelectorAll("section[data-fragment]").forEach((section) => {
           section.hidden = !enabledFragments.has(section.dataset.fragment)
         })
+
+        console.table(
+          [...document.querySelectorAll("section[data-fragment]")].map((section) => ({
+            fragment: section.dataset.fragment,
+            visible: !section.hidden,
+          })),
+        )
 
         fragmentPersonalization.reveal()
       }
@@ -127,20 +159,13 @@ SI.init({
       }
     })
     .catch((error) => {
-      /**
-       * Failure fallback.
-       *
-       * Preserve the original page if Salesforce decisioning is unavailable.
-       */
-      console.error("Unable to load the personalization decision.", error)
+      console.error(`${debugPrefix} Decision request failed`, error)
       fragmentPersonalization.reveal()
     })
 })
 
 /**
- * Temporarily hide all fragment sections before personalization resolves.
- *
- * @returns {{ reveal: () => void }} A function that restores visibility.
+ * Temporary visibility helper.
  */
 function prepareFragmentPersonalization() {
   const style = document.createElement("style")
@@ -155,11 +180,7 @@ function prepareFragmentPersonalization() {
 }
 
 /**
- * Find a nested Salesforce decision output with expected fields.
- *
- * @param {unknown} value Response value to inspect.
- * @param {Set<object>} visited Previously inspected objects.
- * @returns {{ experienceKey: string, fragments: string } | null}
+ * Extract the decision output from a potentially nested response.
  */
 function findDecisionOutput(value, visited = new Set()) {
   if (!value || typeof value !== "object" || visited.has(value)) {
