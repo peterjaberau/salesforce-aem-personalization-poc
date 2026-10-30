@@ -9,8 +9,10 @@ SI.init({
       status: "Opt In",
     },
   ],
+  personalization: {
+    dataspace: "default",
+  },
 }).then(() => {
-
   const currentURL = new URL(window.location.href)
 
   const sitemapConfig = {
@@ -40,4 +42,4 @@ SI.init({
   }
 
   SI.initSitemap(sitemapConfig)
-});
+})
