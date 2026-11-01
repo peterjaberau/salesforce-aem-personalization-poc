@@ -24,18 +24,26 @@ SI.init({
     pageTypes: [
       {
         name: "Home page",
-        isMatch: () =>
-          ["/", "/salesforce-aem-personalization-poc/src/app/static/home.html"].includes(window.location.pathname),
+        isMatch: () => ["/"].includes(window.location.pathname),
         interaction: {
           name: "Page View - Home",
           eventType: "userEngagement",
         },
       },
       {
-        name: "Features page",
-        isMatch: () => window.location.pathname === "/features",
+        name: "Points in sitemap page",
+        isMatch: () => window.location.pathname === "/index-points-in-sitemap",
+        personalizationPoints: ["HOME_HERO", "HOME_FEATURES", "HOME_OFFERS", "HOME_PLANS"],
         interaction: {
-          name: "Page View - Features",
+          name: "Page View - Points in sitemap",
+          eventType: "userEngagement",
+        },
+      },
+      {
+        name: "Points auto discovery page",
+        isMatch: () => window.location.pathname === "/index-points-auto-discovery",
+        interaction: {
+          name: "Page View - Points auto discovery",
           eventType: "userEngagement",
         },
       },
