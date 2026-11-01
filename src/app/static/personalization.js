@@ -55,6 +55,7 @@ export function initializePersonalization(element, { host = typeof window === 'u
     pointsKey: '',
   };
   let disconnectProvider;
+  let disconnectSitemapProvider;
   const controller = {
     // Apply a complete point-to-experience map without passing the element again.
     // eslint-disable-next-line no-use-before-define
@@ -73,6 +74,21 @@ export function initializePersonalization(element, { host = typeof window === 'u
         };
       }
       return disconnectProvider;
+    },
+    // Connect to decisions requested by the sitemap, including an already completed request.
+    connectDecisionFromSitemapProvider() {
+      if (!disconnectSitemapProvider) {
+        // eslint-disable-next-line no-use-before-define
+        const disconnect = connectDecisionFromSitemapProvider(element, host);
+        let connected = true;
+        disconnectSitemapProvider = () => {
+          if (!connected) return;
+          connected = false;
+          disconnect();
+          disconnectSitemapProvider = undefined;
+        };
+      }
+      return disconnectSitemapProvider;
     },
   };
   state.controller = controller;
@@ -260,4 +276,19 @@ function connectDecisionProvider(element, host) {
     unsubscribe();
     host.removeEventListener('personalization:decision-source-ready', onReady);
   };
+}
+
+/** Apply sitemap-requested decisions whether they arrive before or after connection. */
+function connectDecisionFromSitemapProvider(element, host) {
+  if (!host?.addEventListener || !host?.removeEventListener) {
+    throw new Error('A host with event listener support is required to connect sitemap decisions');
+  }
+  const onDecisions = (event) => {
+    if (event.detail instanceof Map) applyPersonalization(element, event.detail);
+  };
+  host.addEventListener('personalization:sitemap-decisions', onDecisions);
+  if (host.decisionFromSitemapProvider instanceof Map) {
+    applyPersonalization(element, host.decisionFromSitemapProvider);
+  }
+  return () => host.removeEventListener('personalization:sitemap-decisions', onDecisions);
 }

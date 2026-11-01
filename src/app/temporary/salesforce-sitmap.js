@@ -32,7 +32,7 @@ SI.init({
       },
       {
         name: "Points in sitemap page",
-        isMatch: () => window.location.pathname === "/index-points-in-sitemap",
+        isMatch: () => /\/index-points-in-sitemap(?:\.html)?\/?$/.test(window.location.pathname),
         personalizationPoints: ["HOME_HERO", "HOME_FEATURES", "HOME_OFFERS", "HOME_PLANS"],
         interaction: {
           name: "Page View - Points in sitemap",
@@ -53,6 +53,7 @@ SI.init({
   SI.initSitemap(sitemapConfig)
   // Custom connection: restore this call after regenerating the sitemap.
   registerDecisionProvider()
+  registerDecisionFromSitemapProvider(sitemapConfig)
 })
 /* eslint-enable */
 
@@ -83,4 +84,32 @@ function registerDecisionProvider() {
     },
   };
   window.dispatchEvent(new Event('personalization:decision-source-ready'));
+}
+
+// Publish the matched page's configured points without a request from the website.
+async function registerDecisionFromSitemapProvider(sitemapConfig) {
+  const page = sitemapConfig.pageTypes.find((pageType) => pageType.isMatch());
+  if (!Array.isArray(page?.personalizationPoints) || !page.personalizationPoints.length) return;
+  try {
+    const points = page.personalizationPoints;
+    console.log('[Salesforce SDK] Request points:', points);
+    const response = await SI.Personalization.fetch(points);
+    console.log('[Salesforce SDK] Raw decision response:', response);
+    if (!Array.isArray(response?.personalizations)) {
+      throw new Error('Unexpected Salesforce personalization response');
+    }
+    const requested = new Set(points);
+    const decisions = new Map();
+    response.personalizations.forEach((item) => {
+      const point = item?.personalizationPointName;
+      const experience = item?.attributes?.experienceKey;
+      if (requested.has(point) && typeof experience === 'string' && experience.trim()) {
+        decisions.set(point, experience.trim());
+      }
+    });
+    window.decisionFromSitemapProvider = decisions;
+    window.dispatchEvent(new CustomEvent('personalization:sitemap-decisions', { detail: decisions }));
+  } catch (error) {
+    console.warn('Sitemap personalization decision request failed', error);
+  }
 }
