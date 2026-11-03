@@ -130,3 +130,8 @@ body {
 .contacts .section-content {
   background: #eefafa;
 }
+
+/* Wrapper-based personalization hides only the selected point's alternatives. */
+[data-personalization-point] > [data-personalization-experience][hidden] {
+  display: none !important;
+}

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MMB8X5HR');
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Point as a Wrapper</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main>
+  <section data-personalization-point="HOME_HERO">
+    <div class="page-section hero-default" data-fragment="home-hero-default"
+           data-personalization-experience="DEFAULT">
+      <div class="section-content">
+        <h1>Home Hero Default</h1>
+      </div>
+    </div>
+
+    <div class="page-section hero-business" data-fragment="home-hero-business"
+           data-personalization-experience="BUSINESS">
+      <div class="section-content">
+        <h2>Home Hero Business</h2>
+      </div>
+    </div>
+  </section>
+
+  <section data-personalization-point="HOME_OFFERS">
+    <div class="page-section" data-fragment="home-offers-default"
+           data-personalization-experience="DEFAULT">
+      <div class="section-content"><h2>Home Offers Default</h2></div>
+    </div>
+
+    <div class="page-section" data-fragment="home-offers-member"
+           data-personalization-experience="MEMBER">
+      <div class="section-content"><h2>Home Offers Member</h2></div>
+    </div>
+  </section>
+
+  <section data-personalization-point="HOME_PLANS">
+    <div class="page-section" data-fragment="home-plans-default"
+           data-personalization-experience="DEFAULT">
+      <div class="section-content"><h2>Home Plans Default</h2></div>
+    </div>
+
+    <div class="page-section" data-fragment="home-plans-family"
+           data-personalization-experience="FAMILY">
+      <div class="section-content"><h2>Home Plans Family</h2></div>
+    </div>
+  </section>
+
+  <section data-personalization-point="HOME_FEATURES">
+    <div class="page-section features" data-fragment="features"
+           data-personalization-experience="DEFAULT">
+      <div class="section-content">
+        <div class="feature-grid">
+          <article class="feature-item">
+            <img src="https://www.vodafone.com.au/images/icons/e-sim-mid.svg" alt="e-sim" />
+            <h2>Simple Fleet Management</h2>
+            <p>SwiftServe our self-service platform making managing fleet simpler and easier</p>
+          </article>
+          <article class="feature-item">
+            <img src="https://www.vodafone.com.au/images/icons/roaming-mid.svg" alt="roaming" />
+            <h2>Operate globally</h2>
+            <p>$5 Roaming to over 100 destinations, with 3 included $5 Roaming days per month on selected plans</p>
+          </article>
+          <article class="feature-item">
+            <img src="https://www.vodafone.com.au/images/icons/connectivity-mid.svg" alt="connectivity" />
+            <h2>Confident coverage</h2>
+            <p>99% population 4G coverage</p>
+          </article>
+          <article class="feature-item">
+            <img src="https://www.vodafone.com.au/images/icons/website.svg" alt="website" />
+            <h2>Flexible Value</h2>
+            <p>Cost-effective plans, shared inclusions and technology options that grow with your business</p>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-section features" data-fragment="home-features-premium"
+           data-personalization-experience="PREMIUM">
+      <div class="section-content"><h2>Home Features Premium</h2></div>
+    </div>
+  </section>
+
+  <section class="page-section faq" data-fragment="faq">
+    <div class="section-content">
+      <h2>FAQ</h2>
+      <div class="faq-grid">
+        <article class="faq-item">
+          <img src="https://www.vodafone.com.au/images/icons/5g-red.svg" alt="5G" />
+          <h3>Our 5G network</h3>
+          <p>
+            Use your 5G approved device on Vodafone’s 5G network in selected areas of more than 3400 sites across
+            Australia.
+          </p>
+        </article>
+        <article class="faq-item">
+          <img src="https://www.vodafone.com.au/images/icons/roaming-red.svg" alt="Roaming" />
+          <h3>$5 roaming</h3>
+          <p>
+            Use your included data, calls and text in over 100 destinations for $5 extra a day. Excludes speed
+            capped data. Destinations may vary. T&amp;C apply.
+          </p>
+        </article>
+        <article class="faq-item">
+          <img src="https://www.vodafone.com.au/images/icon/system/red/call-log.svg" alt="Call log" />
+          <h3>International calls</h3>
+          <p>
+            Our Business First plans allow you to keep in touch with your overseas customers, suppliers and staff in
+            selected destinations.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section contacts" data-fragment="contacts">
+    <div class="section-content">
+      <h2>Contacts</h2>
+    </div>
+  </section>
+
+
+</main>
+
+<script type="module">
+  import { connectDecisionFromSitemapForPointWrapperProvider } from './personalization.js';
+
+  // Show defaults and apply decisions requested by the Salesforce sitemap.
+  connectDecisionFromSitemapForPointWrapperProvider(document.querySelector('main'));
+  // Google Tag Manager loads the Salesforce beacon.
+</script>
+</body>
+</html>
