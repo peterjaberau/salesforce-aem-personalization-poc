@@ -38,7 +38,7 @@ SI.init({
     ],
   }
   /**
-   * #section-hero --> hero_default, hero_business
+   * #section-hero --> hero_default, hero_business, hero_transportation
    *
    *  #section-faq --> faq_default
    *
