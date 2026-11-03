@@ -12,25 +12,30 @@ body {
   margin: 0;
 }
 
+main > section {
+  min-height: 200px;
+  border: 1px solid #d5dbe4;
+}
+
 .page-section {
-  padding: 8px 32px;
+  padding: 6px 16px;
 }
 
 .section-content {
   width: min(100%, 1200px);
-  min-height: 300px;
+  min-height: 200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  padding: 16px;
   text-align: center;
 }
 
 .page-section h1,
 .page-section h2 {
   margin: 0;
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
   line-height: 1.1;
   letter-spacing: -0.03em;
 }
@@ -134,4 +139,47 @@ body {
 /* Wrapper-based personalization hides only the selected point's alternatives. */
 [data-personalization-point] > [data-personalization-experience][hidden] {
   display: none !important;
+}
+
+.debug-toolbar {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f3f6fa;
+  border: 1px solid #d5dbe4;
+}
+
+.debug-toolbar button {
+  padding: 8px 14px;
+  border: 1px solid #aab6c5;
+  border-radius: 4px;
+  background: #fff;
+  color: #172033;
+  cursor: pointer;
+}
+
+.debug-toolbar button:hover {
+  background: #e7edf5;
+}
+
+.experience-links,
+.debug-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.experience-links a {
+  color: #172033;
+  font-weight: 600;
+}
+
+.debug-actions {
+  margin-left: auto;
+  justify-content: flex-end;
 }

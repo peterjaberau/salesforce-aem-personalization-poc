@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MMB8X5HR');
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+      main section > [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+<main>
+  <section id="section-hero">
+    <div id="hero_default" class="page-section hero-default">
+      <div class="section-content"><h1>Home Hero Default</h1></div>
+    </div>
+    <div id="hero_business" class="page-section hero-business" hidden>
+      <div class="section-content"><h2>Home Hero Business</h2></div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="section-content"><h2>Home Offers Default</h2></div>
+  </section>
+
+  <section class="page-section">
+    <div class="section-content"><h2>Home Plans Default</h2></div>
+  </section>
+
+  <section id="section-faq">
+    <div id="faq_default" class="page-section faq">
+      <div class="section-content"><h2>FAQ Default</h2></div>
+    </div>
+  </section>
+
+  <section id="section-features">
+    <div id="features_default" class="page-section features">
+      <div class="section-content"><h2>Home Features Default</h2></div>
+    </div>
+    <div id="features_business" class="page-section features" hidden>
+      <div class="section-content"><h2>Home Features Business</h2></div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { applyPersonalization, connectToDecisions } from './personalization-content.js';
+
+  connectToDecisions(applyPersonalization, 'main');
+</script>
+</body>
+</html>

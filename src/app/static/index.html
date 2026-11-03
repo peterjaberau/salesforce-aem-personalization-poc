@@ -15,66 +15,74 @@
   <title>Home</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-      [data-personalization-point][hidden] { display: none !important; }
+      main section > [hidden] { display: none !important; }
+      main .section-content { flex-direction: column; gap: 16px; }
   </style>
 </head>
 <body>
 <main>
-  <section class="page-section hero-default" data-fragment="home-hero-default"
-           data-personalization-point="HOME_HERO" data-personalization-experience="DEFAULT">
-    <div class="section-content">
-      <h1>Home Hero Default</h1>
+  <div class="debug-toolbar">
+    <nav class="experience-links" aria-label="Experience selection">
+      <a href="?" data-utm-source="">DEFAULT</a>
+      <a href="?utm_source=BUSINESS" data-utm-source="BUSINESS">BUSINESS</a>
+      <a href="?utm_source=TRANSPORTATION" data-utm-source="TRANSPORTATION">TRANSPORTATION</a>
+    </nav>
+    <div class="debug-actions" role="group" aria-label="Personalization debug actions">
+      <button type="button" data-debug-action="decisions">All Decisions</button>
+      <button type="button" data-debug-action="raw">Raw SDK Response</button>
+      <button type="button" data-debug-action="page">Matched Page</button>
+      <button type="button" data-debug-action="zones">Content Zones</button>
+      <button type="button" data-debug-action="status">Match Status</button>
+    </div>
+  </div>
+
+  <section id="section-hero">
+    <div id="hero_default" class="page-section hero-default">
+      <div class="section-content">
+        <h1>Home Hero Default</h1>
+        <button type="button" class="log-decision">Log decision</button>
+      </div>
+    </div>
+    <div id="hero_business" class="page-section hero-business" hidden>
+      <div class="section-content">
+        <h2>Home Hero Business</h2>
+        <button type="button" class="log-decision">Log decision</button>
+      </div>
     </div>
   </section>
 
-  <section class="page-section hero-business" data-fragment="home-hero-business"
-           data-personalization-point="HOME_HERO" data-personalization-experience="BUSINESS">
-    <div class="section-content">
-      <h2>Home Hero Business</h2>
+  <section id="section-faq">
+    <div id="faq_default" class="page-section faq">
+      <div class="section-content">
+        <h2>FAQ Default</h2>
+        <button type="button" class="log-decision">Log decision</button>
+      </div>
     </div>
   </section>
 
-  <section class="page-section" data-fragment="home-offers-default"
-           data-personalization-point="HOME_OFFERS" data-personalization-experience="DEFAULT">
-    <div class="section-content"><h2>Home Offers Default</h2></div>
+  <section id="section-features">
+    <div id="features_default" class="page-section features">
+      <div class="section-content">
+        <h2>Home Features Default</h2>
+        <button type="button" class="log-decision">Log decision</button>
+      </div>
+    </div>
+    <div id="features_business" class="page-section features" hidden>
+      <div class="section-content">
+        <h2>Home Features Business</h2>
+        <button type="button" class="log-decision">Log decision</button>
+      </div>
+    </div>
   </section>
-
-  <section class="page-section" data-fragment="home-offers-member"
-           data-personalization-point="HOME_OFFERS" data-personalization-experience="MEMBER">
-    <div class="section-content"><h2>Home Offers Member</h2></div>
-  </section>
-
-  <section class="page-section" data-fragment="home-plans-default"
-           data-personalization-point="HOME_PLANS" data-personalization-experience="DEFAULT">
-    <div class="section-content"><h2>Home Plans Default</h2></div>
-  </section>
-
-  <section class="page-section" data-fragment="home-plans-family"
-           data-personalization-point="HOME_PLANS" data-personalization-experience="FAMILY">
-    <div class="section-content"><h2>Home Plans Family</h2></div>
-  </section>
-
-  <section class="page-section features" data-fragment="features"
-           data-personalization-point="HOME_FEATURES" data-personalization-experience="DEFAULT">
-    <div class="section-content"><h2>Home Features DEFAULT</h2></div>
-
-  </section>
-
-  <section class="page-section features" data-fragment="home-features-premium"
-           data-personalization-point="HOME_FEATURES" data-personalization-experience="PREMIUM">
-    <div class="section-content"><h2>Home Features Premium</h2></div>
-  </section>
-
-
-
 </main>
 
 <script type="module">
-  import { connectDecisionFromSitemapProvider } from './personalization.js';
+  import { applyPersonalization, connectToDecisions } from './personalization.js';
+  import { connectDecisionDebug } from './debug.js';
 
-  // Show defaults and apply decisions requested by the Salesforce sitemap.
-  connectDecisionFromSitemapProvider(document.querySelector('main'));
-  // Google Tag Manager loads the Salesforce beacon.
+  connectToDecisions(applyPersonalization, 'main');
+
+  connectDecisionDebug('main');
 </script>
 </body>
 </html>

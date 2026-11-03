@@ -18,14 +18,14 @@
 <body>
 <main>
   <section data-personalization-point="HOME_HERO">
-    <div class="page-section hero-default" data-fragment="home-hero-default"
+    <div class="page-section hero-default"
            data-personalization-experience="DEFAULT">
       <div class="section-content">
         <h1>Home Hero Default</h1>
       </div>
     </div>
 
-    <div class="page-section hero-business" data-fragment="home-hero-business"
+    <div class="page-section hero-business"
            data-personalization-experience="BUSINESS">
       <div class="section-content">
         <h2>Home Hero Business</h2>
@@ -34,36 +34,36 @@
   </section>
 
   <section data-personalization-point="HOME_OFFERS">
-    <div class="page-section" data-fragment="home-offers-default"
+    <div class="page-section"
            data-personalization-experience="DEFAULT">
       <div class="section-content"><h2>Home Offers Default</h2></div>
     </div>
 
-    <div class="page-section" data-fragment="home-offers-member"
+    <div class="page-section"
            data-personalization-experience="MEMBER">
       <div class="section-content"><h2>Home Offers Member</h2></div>
     </div>
   </section>
 
   <section data-personalization-point="HOME_PLANS">
-    <div class="page-section" data-fragment="home-plans-default"
+    <div class="page-section"
            data-personalization-experience="DEFAULT">
       <div class="section-content"><h2>Home Plans Default</h2></div>
     </div>
 
-    <div class="page-section" data-fragment="home-plans-family"
+    <div class="page-section"
            data-personalization-experience="FAMILY">
       <div class="section-content"><h2>Home Plans Family</h2></div>
     </div>
   </section>
 
   <section data-personalization-point="HOME_FEATURES">
-    <div class="page-section features" data-fragment="features"
+    <div class="page-section features"
            data-personalization-experience="DEFAULT">
       <div class="section-content"><h2>Home Features DEFAULT</h2></div>
     </div>
 
-    <div class="page-section features" data-fragment="home-features-premium"
+    <div class="page-section features"
            data-personalization-experience="PREMIUM">
       <div class="section-content"><h2>Home Features Premium</h2></div>
     </div>
@@ -74,10 +74,10 @@
 </main>
 
 <script type="module">
-  import { connectDecisionFromSitemapForPointWrapperProvider } from './personalization.js';
+  import { applyPersonalizationForPointWrapper, connectToDecisionProvider } from './personalization.js';
 
   // Show defaults and apply decisions requested by the Salesforce sitemap.
-  connectDecisionFromSitemapForPointWrapperProvider(document.querySelector('main'));
+  connectToDecisionProvider(applyPersonalizationForPointWrapper, 'main');
   // Google Tag Manager loads the Salesforce beacon.
 </script>
 </body>

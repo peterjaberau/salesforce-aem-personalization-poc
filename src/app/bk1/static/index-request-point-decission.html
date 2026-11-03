@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MMB8X5HR');
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request a Point Decision</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main>
+  <section data-personalization-point="HOME_HERO">
+    <div class="page-section hero-default"
+           data-personalization-experience="DEFAULT">
+      <div class="section-content">
+        <h1>Home Hero Default</h1>
+      </div>
+    </div>
+
+    <div class="page-section hero-business"
+           data-personalization-experience="BUSINESS">
+      <div class="section-content">
+        <h2>Home Hero Business</h2>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="page-section">
+      <div class="section-content"><h2>Home Offers Default</h2></div>
+    </div>
+
+  </section>
+
+  <section>
+    <div class="page-section">
+      <div class="section-content"><h2>Home Plans FIXED</h2></div>
+    </div>
+
+  </section>
+
+  <section>
+    <div class="page-section features">
+      <div class="section-content"><h2>Home Features FIXED</h2></div>
+    </div>
+
+  </section>
+
+
+
+</main>
+
+<script type="module">
+  import { applyPersonalizationForPointWrapper, requestDecisionsForPoints } from './personalization.js';
+
+  requestDecisionsForPoints(['HOME_HERO'], applyPersonalizationForPointWrapper, 'main');
+</script>
+</body>
+</html>

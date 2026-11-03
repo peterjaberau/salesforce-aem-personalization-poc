@@ -30,6 +30,14 @@ SI.init({
         },
       },
       {
+        name: "Request point decision page",
+        isMatch: () => /\/index-request-point-decission(?:\.html)?\/?$/.test(window.location.pathname),
+        interaction: {
+          name: "Page View - Request point decision",
+          eventType: "userEngagement",
+        },
+      },
+      {
         name: "Point as wrapper page",
         isMatch: () => /\/index-point-as-wrapper(?:\.html)?\/?$/.test(window.location.pathname),
         personalizationPoints: ["HOME_HERO", "HOME_FEATURES", "HOME_OFFERS", "HOME_PLANS"],
@@ -50,7 +58,34 @@ SI.init({
     ],
   }
 
+  // Diagnostics only: inspect SDK capabilities and observe sitemap lifecycle events.
+  try {
+    console.log('[Salesforce diagnostics] SDK instance:', SI);
+    console.log('[Salesforce diagnostics] SDK properties:', Object.keys(SI));
+    console.log('[Salesforce diagnostics] SDK custom event names:', SI.CustomEvents);
+    console.log('[Salesforce diagnostics] Sitemap result API availability:', {
+      sdk: typeof SI.getSitemapResult,
+      mcis: typeof SI.mcis?.getSitemapResult,
+    });
+    [
+      SI.CustomEvents?.OnInitSitemap,
+      SI.CustomEvents?.OnPageMatchStatusUpdated,
+      'salesforce:onInitSitemap',
+      'salesforce:onPageMatchStatusUpdated',
+      'interactions:onInitSitemap',
+      'interactions:onPageMatchStatusUpdated',
+    ].filter((name, index, names) => typeof name === 'string' && names.indexOf(name) === index)
+      .forEach((name) => document.addEventListener(name, (event) => {
+        console.log('[Salesforce diagnostics] SDK event:', name, event.detail);
+      }));
+  } catch (error) {
+    console.warn('[Salesforce diagnostics] Could not set up diagnostics:', error);
+  }
+
   SI.initSitemap(sitemapConfig)
+  // Let pages make on-demand requests after Salesforce initialization completes.
+  window.salesforcePersonalizationReady = true
+  window.dispatchEvent(new Event("personalization:salesforce-ready"))
   // Custom connection: restore this call after regenerating the sitemap.
   registerDecisionFromSitemapProvider(sitemapConfig)
 })
@@ -59,6 +94,7 @@ SI.init({
 // Publish the matched page's configured points without a request from the website.
 async function registerDecisionFromSitemapProvider(sitemapConfig) {
   const page = sitemapConfig.pageTypes.find((pageType) => pageType.isMatch());
+  console.log('[Salesforce diagnostics] Page selected by custom lookup:', page?.name, page);
   if (!Array.isArray(page?.personalizationPoints) || !page.personalizationPoints.length) return;
   try {
     const points = page.personalizationPoints;
