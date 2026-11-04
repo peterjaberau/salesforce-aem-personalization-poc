@@ -1,9 +1,8 @@
-/** Apply each experience to the matching content zone and its direct child. */
+/** Display each decision's attributes in its matching content zone. */
 export function applyPersonalization(container, decisions = []) {
   decisions.forEach((decision) => {
     const selector = decision?.contentZone?.selector
-    const contentSelector = decision?.attributes?.contentPath
-    if (typeof selector !== "string" || !selector.trim() || typeof contentSelector !== "string" || !contentSelector.trim()) return
+    if (typeof selector !== "string" || !selector.trim()) return
 
     let zone
     try {
@@ -12,22 +11,12 @@ export function applyPersonalization(container, decisions = []) {
       console.warn("Invalid personalization content zone selector:", selector, error)
       return
     }
-    if (!zone) return
-    const children = Array.from(zone.children)
-    let selected
-    try {
-      const target = contentSelector.trim()
-      selected = children.find((child) => child.id === target || child.matches(target))
-    } catch (error) {
-      console.warn("Invalid personalization content selector:", contentSelector, error)
-      return
-    }
-    if (!selected) return
-    children
-      .filter((child) => child.id)
-      .forEach((child) => {
-        child.hidden = child !== selected
-      })
+    const heading = zone?.querySelector(".section-content h1")
+    if (!heading) return
+    const name = decision.contentZone.name || decision.personalizationPointName || "Unknown zone"
+    const experience = decision.attributes?.experienceKey ?? "—"
+    const contentPath = decision.attributes?.contentPath ?? "—"
+    heading.textContent = `${name}: ${experience} - ${contentPath}`
   })
 }
 
