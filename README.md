@@ -1,13 +1,13 @@
 # Website personalization proof of concept
 
-This guide explains how to add a personalized section to the website. In this proof of concept, Salesforce chooses a decision, and the website displays its content zone name, `experienceKey`, and `contentPath`. The website does not currently fetch content from `contentPath`.
+This guide explains how to add a personalized section to the website. In this proof of concept, Salesforce chooses a decision, and the website displays its content zone name, `experienceKey`, and `contentPath`.
 
 ## How the pieces connect
 
 1. The website contains a section with a stable selector and a heading for the decision.
 2. Google Tag Manager loads the Salesforce beacon. The published Salesforce sitemap identifies the current page and its content zones.
 3. Each content zone name is also the API name of a Salesforce personalization point. The sitemap requests decisions for those names.
-4. Salesforce returns decision attributes, including `contentPath`. The sitemap adds the matched content zone to each decision and publishes a `personalization:decisions` event.
+4. Salesforce returns decision attributes, which can include `experienceKey` and `contentPath`. The sitemap adds the matched content zone to each decision and publishes a `personalization:decisions` event.
 5. The website's personalization module uses the content zone selector to find the section and displays the returned attributes in its heading.
 
 The sitemap also caches the enriched array in `window.decisionsProvider`, so the website can use a decision that arrived before its listener connected.
@@ -54,7 +54,7 @@ In Salesforce Personalization, create a point for the section or use an existing
 
 - **Point API name:** `SECTION_PROMO_V1`, matching the sitemap zone name exactly.
 - Configure its data space, personalization type, and content schema as appropriate to your Salesforce setup.
-- Add text attributes with API names **`experienceKey`** and **`contentPath`** to the content schema if you want both values displayed. Missing values appear as `—`.
+- Optionally add text attributes with API names **`experienceKey`** and **`contentPath`** to the content schema if you want those values displayed. Neither attribute is required by the renderer; missing values appear as `—`.
 - Activate the point and configure its decisions. The exact screens and publishing steps can vary with your Salesforce setup.
 
 See Salesforce's [content schema configuration guide](https://help.salesforce.com/s/articleView?id=mktg.persnl_content_schema_configure.htm&language=en_US&type=5).
@@ -72,7 +72,7 @@ Set priorities so the specific business decision takes precedence over the defau
 
 For UTM targeting, select **UTM Parameters → Source** rather than comparing **Source → URL** to `BUSINESS`: the latter targets the URL, not just the `utm_source` parameter. See Salesforce's [targeting rule guide](https://help.salesforce.com/s/articleView?id=sf.persnl_personalization_point_targeting_rules_create.htm&language=en_US&type=5).
 
-The current renderer displays `contentPath` as text; it does not load the referenced content. A missing attribute displays as `—`, and a section without a returned decision keeps its initial heading.
+The current renderer only displays `contentPath` as text. Its value can be any string and does not need to match an HTML selector or a real URL. It is not used to choose the section, select a variant, or load content. The content zone selector is what identifies the section. A missing attribute displays as `—`, and a section without a returned decision keeps its initial heading.
 
 ### 5. Verify the page and decision
 
@@ -98,7 +98,7 @@ For the business decision, the enriched response should include values like:
 
 Salesforce may return additional fields. The sitemap adds `contentZone`; it is not automatically included in the raw decision response.
 
-If the decision does not appear, check the page match, point name, rule and priority, returned attributes, and section selector. If `attributes` is empty, inspect the decision's content schema and configuration in Salesforce. If the expected point is absent, check whether it is active and included in the matched page's zones.
+If the decision does not appear, check the page match, point name, rule and priority, and content zone selector. If optional attributes display as `—`, inspect the decision's content schema and configuration in Salesforce. If the expected point is absent, check whether it is active and included in the matched page's zones.
 
 ## Integration files
 

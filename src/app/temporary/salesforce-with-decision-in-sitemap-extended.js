@@ -15,6 +15,10 @@ SI.init({
   },
 }).then(() => {
   const sitemapConfig = {
+    global: {
+      listeners: [],
+      onActionEvent: (actionEvent) => actionEvent,
+    },
     pageTypeDefault: {
       name: "default",
       eventType: "userEngagement",
@@ -22,7 +26,7 @@ SI.init({
     pageTypes: [
       {
         name: "Home page",
-        isMatch: () => window.location.pathname === "/" || /\/index\.html$/.test(window.location.pathname),
+        isMatch: () => window.location.pathname.includes("/index.html"),
         // Zone names must match Salesforce personalization point API names.
         // Replace these example selectors with stable targets on the actual page.
         contentZones: [
@@ -35,16 +39,22 @@ SI.init({
           eventType: "userEngagement",
         },
       },
+      {
+        name: "Business SIM-only page",
+        isMatch: () => window.location.pathname.includes("/business/sim-only"),
+        contentZones: [
+          { name: "SECTION_HERO_V1", selector: "#section-hero" },
+          { name: "SECTION_FAQ_V1", selector: "#section-faq" },
+          { name: "SECTION_FEATURES_V1", selector: "#section-features" },
+        ],
+        interaction: {
+          name: "Page View - Business SIM-only",
+          eventType: "userEngagement",
+        },
+      },
     ],
   }
-  /**
-   * #section-hero --> hero_default, hero_business, hero_transportation
-   *
-   *  #section-faq --> faq_default
-   *
-   *  #section-features --> features_business, features_default
-   *
-   */
+
 
   // Listen before initialization so the SDK's selected-page event is not missed.
   currentPageMatched(sitemapConfig, getPageDecisions)
@@ -98,6 +108,7 @@ async function getPageDecisions(page) {
       });
     });
     window.decisionsProvider = contentDecisions;
+    console.log('[Personalization] Published decisions for page', page.name, contentDecisions);
     window.dispatchEvent(new CustomEvent('personalization:decisions', { detail: contentDecisions }));
   } catch (error) {
     console.warn('Sitemap personalization decision request failed', error);
